@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Ship, Clock, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import BookingModal from './BookingModal';
 
 const PopularFerries = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFerry, setSelectedFerry] = useState('');
+
+  const handleBookNow = (ferryName) => {
+    setSelectedFerry(ferryName);
+    setIsModalOpen(true);
+  };
   const ferries = [
     {
       name: "Makruzz",
@@ -134,7 +142,10 @@ const PopularFerries = () => {
                     </div>
                     <div className="flex justify-between items-center border-t border-gray-100 pt-4">
                         <span className="text-brand-blue font-bold text-lg">{ferry.price}</span>
-                        <button className="text-brand-green font-semibold text-sm hover:underline">
+                        <button 
+                            onClick={() => handleBookNow(ferry.name)}
+                            className="text-brand-green font-semibold text-sm hover:underline"
+                        >
                             Book Now →
                         </button>
                     </div>
@@ -144,6 +155,13 @@ const PopularFerries = () => {
           ))}
         </Swiper>
       </div>
+
+      <BookingModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        packageName={selectedFerry} 
+        title="Book Ferry Tickets" 
+      />
     </section>
   );
 };

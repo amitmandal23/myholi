@@ -23,6 +23,10 @@ import DestinationDetail from './pages/DestinationDetail';
 import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
 import ServiceDetail from './pages/ServiceDetail';
+import Ferries from './pages/Ferries';
+import CabServices from './pages/CabServices';
+import CruisePackages from './pages/CruisePackages';
+import WaterSports from './pages/WaterSports';
 import BlogDetail from './pages/BlogDetail';
 import BlogList from './pages/BlogList';
 import TermsCondition from './pages/TermsCondition';
@@ -83,6 +87,10 @@ function App() {
         <Route path="/destinations/:slug" element={<DestinationDetail />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/services/ferries" element={<Ferries />} />
+        <Route path="/services/cabs" element={<CabServices />} />
+        <Route path="/services/cruises" element={<CruisePackages />} />
+        <Route path="/services/water-sports" element={<WaterSports />} />
         <Route path="/services/:slug" element={<ServiceDetail />} />
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blog/:slug" element={<BlogDetail />} />

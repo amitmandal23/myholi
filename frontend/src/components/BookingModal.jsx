@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, MapPin, User, Phone, Mail, Minus, Plus } from 'lucide-react';
 
-const BookingModal = ({ isOpen, onClose, packageName }) => {
+const BookingModal = ({ isOpen, onClose, packageName, title = "Want to Go For A Memorable Holiday?" }) => {
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -80,7 +80,7 @@ const BookingModal = ({ isOpen, onClose, packageName }) => {
         
         {/* Header */}
         <div className="flex justify-between items-center p-6 pb-2">
-          <h2 className="text-2xl font-bold text-gray-900">Want to Go For A Memorable Holiday?</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
           <button 
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 rounded-full"
