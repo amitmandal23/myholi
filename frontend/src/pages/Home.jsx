@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import PlanningSection from '../components/PlanningSection';
 import TrendingPackages from '../components/TrendingPackages';
 import StepsSection from '../components/StepsSection';
+import FloatingPlanButton from '../components/FloatingPlanButton';
 import Destinations from '../components/Destinations';
 import PopularSightseeing from '../components/PopularSightseeing';
 import PopularActivities from '../components/PopularActivities';
@@ -36,11 +37,11 @@ const Home = () => {
       <PopularFerries />
       <Features />
       <PromoBanner />
-      <Testimonials />
       <BlogSection />
       <FAQSection />
       <CTASection />
       <Footer />
+      <FloatingPlanButton />
     </div>
   );
 };

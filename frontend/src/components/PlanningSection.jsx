@@ -1,94 +1,72 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
+import { ArrowRight, Compass, Map, Wallet, CheckCircle } from 'lucide-react';
 
 const PlanningSection = () => {
-  const cards = [
+  const steps = [
     {
+      icon: <Compass size={40} className="text-brand-blue" />,
       title: "First Time Visitor?",
-      subtitle: "We make your debut trip unforgettable with curated plans.",
-      image: "/img/firsttimevisitor.jpg",
-      color: "from-blue-600 to-blue-900"
+      description: "We curate the perfect debut itinerary so you don't miss the highlights.",
+      bg: "bg-blue-50",
+      border: "border-blue-100"
     },
     {
+      icon: <Map size={40} className="text-teal-600" />,
       title: "Confused About Islands?",
-      subtitle: "Let us guide you to the perfect island for your vibe.",
-      image: "/img/character1.jpg",
-      color: "from-teal-600 to-teal-900"
+      description: "From Havelock's beaches to Neil's tranquility, we guide you right.",
+      bg: "bg-teal-50",
+      border: "border-teal-100"
     },
     {
+      icon: <Wallet size={40} className="text-orange-600" />,
       title: "Worried About Costs?",
-      subtitle: "Transparent pricing with no hidden fees, guaranteed.",
-      image: "/img/worriedaboutcost.jpg",
-      color: "from-orange-600 to-orange-900"
+      description: "Transparent pricing with zero hidden fees. Luxury on a budget.",
+      bg: "bg-orange-50",
+      border: "border-orange-100"
     }
   ];
 
-  const Card = ({ card }) => (
-    <div className="group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer h-80 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-      <img 
-        src={card.image} 
-        alt={card.title} 
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-      />
-      <div className={`absolute inset-0 bg-gradient-to-t ${card.color} opacity-80 mix-blend-multiply transition-opacity duration-300`}></div>
-      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-      
-      <div className="absolute bottom-0 left-0 p-8 w-full">
-        <h3 className="text-2xl font-bold text-white mb-2">{card.title}</h3>
-        <p className="text-gray-200 text-sm mb-6 opacity-90 leading-relaxed">
-            {card.subtitle}
-        </p>
-        <div className="flex items-center text-white font-bold text-sm opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-            Get Started <ArrowRight size={16} className="ml-2" />
-        </div>
-      </div>
-    </div>
-  );
-
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Planning a Trip to <span className="text-brand-blue">Andaman?</span>
+    <section className="py-24 bg-white relative overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-teal-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 translate-x-1/2 translate-y-1/2"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-16">
+            <span className="text-brand-blue font-bold tracking-wider uppercase text-sm mb-2 block">Start Your Journey</span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+              Planning Made <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-teal-400">Simple</span>
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              We know planning can be overwhelming. Here's how we help you start.
+            <p className="text-gray-500 max-w-2xl mx-auto text-xl font-light">
+              We know planning a trip to Andaman can be overwhelming. We're here to simplify every step.
             </p>
         </div>
 
-        {/* Desktop View */}
-        <div className="hidden md:grid md:grid-cols-3 gap-8">
-          {cards.map((card, index) => (
-            <Card key={index} card={card} />
+        <div className="grid md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <div 
+                key={index} 
+                className={`group p-8 rounded-[2rem] border ${step.border} ${step.bg} hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative overflow-hidden`}
+            >
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-150 transition-transform duration-700">
+                    {step.icon}
+                </div>
+                
+                <div className="relative z-10">
+                    <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        {step.icon}
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h3>
+                    <p className="text-gray-600 mb-8 leading-relaxed">
+                        {step.description}
+                    </p>
+                    <div className="flex items-center text-gray-900 font-bold group-hover:gap-2 transition-all cursor-pointer">
+                        Get Started <ArrowRight size={18} className="ml-2" />
+                    </div>
+                </div>
+            </div>
           ))}
-        </div>
-
-        {/* Mobile View */}
-        <div className="md:hidden">
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1.2}
-            centeredSlides={true}
-            loop={true}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-            pagination={{ clickable: true }}
-            className="pb-12"
-          >
-            {cards.map((card, index) => (
-              <SwiperSlide key={index}>
-                <Card card={card} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
         </div>
       </div>
     </section>
