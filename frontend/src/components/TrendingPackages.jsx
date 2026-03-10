@@ -15,8 +15,13 @@ const TrendingPackages = () => {
         const response = await fetch('http://localhost:8000/api/packages');
         if (response.ok) {
           const data = await response.json();
-          // Filter or just take first 4 for now
-          const mappedData = data.slice(0, 4).map(pkg => ({
+          
+          if (!Array.isArray(data)) return;
+
+          // Shuffle the array to show random packages from different categories
+          const shuffled = [...data].sort(() => 0.5 - Math.random());
+          
+          const mappedData = shuffled.slice(0, 4).map(pkg => ({
             title: pkg.title,
             duration: pkg.duration,
             image: pkg.featured_image && !pkg.featured_image.startsWith('http')
@@ -37,44 +42,44 @@ const TrendingPackages = () => {
   }, []);
 
   const PackageCard = ({ pkg }) => (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group h-full">
-      <div className="relative h-64 overflow-hidden">
+    <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group h-full border border-gray-100">
+      <div className="relative h-72 overflow-hidden">
         <img 
           src={pkg.image} 
           alt={pkg.title} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute top-4 left-4">
-            <span className="bg-white/90 backdrop-blur-sm text-brand-blue text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+            <span className="bg-white/90 backdrop-blur-md text-brand-blue text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
               <Tag size={12} /> {pkg.type}
             </span>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 pt-12">
           <div className="flex justify-between items-end">
             <div className="text-white">
-                <div className="flex items-center gap-1 text-yellow-400 text-xs font-bold mb-1">
-                    <Star size={12} fill="currentColor" /> {pkg.rating}
+                <div className="flex items-center gap-1 text-yellow-400 text-xs font-bold mb-2">
+                    <Star size={14} fill="currentColor" /> {pkg.rating} (120+ Reviews)
                 </div>
-                <h3 className="font-bold text-xl leading-tight">{pkg.title}</h3>
+                <h3 className="font-bold text-2xl leading-tight mb-1 group-hover:text-teal-200 transition-colors">{pkg.title}</h3>
             </div>
           </div>
         </div>
       </div>
       
-      <div className="p-5">
-        <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+      <div className="p-6">
+        <div className="flex justify-between items-center mb-6">
             <div className="flex items-center text-gray-500 text-sm font-medium">
                 <Clock size={16} className="mr-2 text-brand-green" />
                 {pkg.duration}
             </div>
-            <div className="text-brand-blue font-bold text-sm bg-blue-50 px-3 py-1 rounded-full">
+            <div className="text-brand-blue font-bold text-sm bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                 Customizable
             </div>
         </div>
         
         <Link 
           to={`/packages/${pkg.category}/${pkg.slug}`}
-          className="w-full bg-brand-blue/5 text-brand-blue hover:bg-brand-blue hover:text-white py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 group-hover:gap-3 border border-brand-blue/10"
+          className="w-full bg-white text-brand-blue border-2 border-brand-blue hover:bg-brand-blue hover:text-white py-3 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 group-hover:gap-3"
         >
           View Itinerary <ArrowRight size={18} />
         </Link>
