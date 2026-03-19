@@ -13,7 +13,7 @@ const ManageActivities = () => {
 
   const fetchActivities = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/activities');
+      const response = await fetch('https://andamanholidaytrips.in/api/activities');
       if (!response.ok) {
         throw new Error('Failed to fetch activities');
       }
@@ -29,7 +29,7 @@ const ManageActivities = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this activity?')) {
       try {
-        await fetch(`http://localhost:8000/api/activities/${id}`, {
+        await fetch(`https://andamanholidaytrips.in/api/activities/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -74,7 +74,7 @@ const ManageActivities = () => {
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {act.featured_image || act.image ? (
                        <img 
-                         src={`http://localhost:8000${act.featured_image || act.image}`} 
+                         src={`https://andamanholidaytrips.in${act.featured_image || act.image}`} 
                          alt={act.title} 
                          className="h-full w-full object-cover"
                          onError={(e) => {

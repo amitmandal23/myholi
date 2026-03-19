@@ -112,8 +112,8 @@ class PackageController extends Controller
                 'price' => 'required|numeric',
                 'discounted_price' => 'nullable|numeric',
                 'overview' => 'required|string',
-                // 'featured_image' => 'required|image', // Simplified for now
-                // Add other validations as needed
+                'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             $slug = Str::slug($request->title);
@@ -128,16 +128,51 @@ class PackageController extends Controller
             
             // Handle Featured Image
             if ($request->hasFile('featured_image')) {
-                $path = $request->file('featured_image')->store('packages', 'public');
-                $package->featured_image = '/storage/' . $path;
+                $file = $request->file('featured_image');
+                if ($file->isValid()) {
+                    // Create direct path without symbolic link
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $directory = public_path('storage/packages');
+                    
+                    // Create directory if it doesn't exist
+                    if (!is_dir($directory)) {
+                        mkdir($directory, 0755, true);
+                    }
+                    
+                    // Move file directly to public/storage
+                    $file->move($directory, $filename);
+                    $package->featured_image = '/storage/packages/' . $filename;
+                } else {
+                    \Log::error('Featured image upload failed', [
+                        'error' => $file->getErrorMessage(),
+                        'originalName' => $file->getClientOriginalName()
+                    ]);
+                }
             }
 
             // Handle Gallery Images
             $galleryImages = [];
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $file) {
-                    $path = $file->store('packages/gallery', 'public');
-                    $galleryImages[] = '/storage/' . $path;
+                    if ($file->isValid()) {
+                        // Create direct path without symbolic link
+                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                        $directory = public_path('storage/packages/gallery');
+                        
+                        // Create directory if it doesn't exist
+                        if (!is_dir($directory)) {
+                            mkdir($directory, 0755, true);
+                        }
+                        
+                        // Move file directly to public/storage
+                        $file->move($directory, $filename);
+                        $galleryImages[] = '/storage/packages/gallery/' . $filename;
+                    } else {
+                        \Log::error('Gallery image upload failed', [
+                            'error' => $file->getErrorMessage(),
+                            'originalName' => $file->getClientOriginalName()
+                        ]);
+                    }
                 }
             }
             $package->images = $galleryImages;
@@ -177,8 +212,26 @@ class PackageController extends Controller
             
             // Handle Featured Image
             if ($request->hasFile('featured_image')) {
-                $path = $request->file('featured_image')->store('packages', 'public');
-                $package->featured_image = '/storage/' . $path;
+                $file = $request->file('featured_image');
+                if ($file->isValid()) {
+                    // Create direct path without symbolic link
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $directory = public_path('storage/packages');
+                    
+                    // Create directory if it doesn't exist
+                    if (!is_dir($directory)) {
+                        mkdir($directory, 0755, true);
+                    }
+                    
+                    // Move file directly to public/storage
+                    $file->move($directory, $filename);
+                    $package->featured_image = '/storage/packages/' . $filename;
+                } else {
+                    \Log::error('Featured image upload failed in update', [
+                        'error' => $file->getErrorMessage(),
+                        'originalName' => $file->getClientOriginalName()
+                    ]);
+                }
             }
 
             // Handle Gallery Images Update
@@ -189,8 +242,25 @@ class PackageController extends Controller
             
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $file) {
-                    $path = $file->store('packages/gallery', 'public');
-                    $currentImages[] = '/storage/' . $path;
+                    if ($file->isValid()) {
+                        // Create direct path without symbolic link
+                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                        $directory = public_path('storage/packages/gallery');
+                        
+                        // Create directory if it doesn't exist
+                        if (!is_dir($directory)) {
+                            mkdir($directory, 0755, true);
+                        }
+                        
+                        // Move file directly to public/storage
+                        $file->move($directory, $filename);
+                        $currentImages[] = '/storage/packages/gallery/' . $filename;
+                    } else {
+                        \Log::error('Gallery image upload failed in update', [
+                            'error' => $file->getErrorMessage(),
+                            'originalName' => $file->getClientOriginalName()
+                        ]);
+                    }
                 }
             }
             // Update images field with merged array

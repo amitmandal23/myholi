@@ -28,7 +28,7 @@ const TestimonialForm = () => {
 
   const fetchTestimonial = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/testimonials/${id}`);
+      const response = await fetch(`https://andamanholidaytrips.in/api/testimonials/${id}`);
       if (!response.ok) throw new Error('Failed to fetch testimonial');
       const data = await response.json();
       setFormData(data);
@@ -78,8 +78,8 @@ const TestimonialForm = () => {
     }
 
     const url = isEditMode 
-      ? `http://localhost:8000/api/testimonials/${id}`
-      : 'http://localhost:8000/api/testimonials';
+      ? `https://andamanholidaytrips.in/api/testimonials/${id}`
+      : 'https://andamanholidaytrips.in/api/testimonials';
 
     try {
       const response = await fetch(url, {

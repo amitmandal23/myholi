@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Loader } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS } from '../../config/api';
 
 const DashboardHome = () => {
   const { token } = useAuth();
@@ -18,7 +19,7 @@ const DashboardHome = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/dashboard/stats', {
+        const response = await fetch(API_ENDPOINTS.DASHBOARD_STATS, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'

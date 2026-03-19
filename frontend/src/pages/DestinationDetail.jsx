@@ -17,7 +17,7 @@ const DestinationDetail = () => {
   useEffect(() => {
     const fetchDestinationData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/destinations/slug/${slug}`);
+        const response = await fetch(`https://andamanholidaytrips.in/api/destinations/slug/${slug}`);
         if (!response.ok) throw new Error('Destination not found');
         const result = await response.json();
         
@@ -58,7 +58,7 @@ const DestinationDetail = () => {
 
         // Fix image paths if needed
         if (parsedData.hero_image && !parsedData.hero_image.startsWith('http')) {
-            parsedData.heroImage = `http://localhost:8000${parsedData.hero_image}`;
+            parsedData.heroImage = `https://andamanholidaytrips.in${parsedData.hero_image}`;
         } else {
             parsedData.heroImage = parsedData.hero_image;
         }

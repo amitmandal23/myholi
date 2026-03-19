@@ -28,7 +28,7 @@ const PackageDetail = () => {
     // Fetch data based on URL params
     const fetchPackageData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/packages/${category}/${slug}`, {
+        const response = await fetch(`https://andamanholidaytrips.in/api/packages/${category}/${slug}`, {
             headers: {
                 'Accept': 'application/json'
             }
@@ -72,10 +72,10 @@ const PackageDetail = () => {
 
         // If no images in gallery, use featured_image as first slide
         if (!parsedData.images || parsedData.images.length === 0) {
-            parsedData.images = parsedData.featured_image ? [`http://localhost:8000${parsedData.featured_image}`] : [];
+            parsedData.images = parsedData.featured_image ? [`https://andamanholidaytrips.in${parsedData.featured_image}`] : [];
         } else {
              // Prepend base URL to images if needed
-             parsedData.images = parsedData.images.map(img => img.startsWith('http') ? img : `http://localhost:8000${img}`);
+             parsedData.images = parsedData.images.map(img => img.startsWith('http') ? img : `https://andamanholidaytrips.in${img}`);
         }
 
         setPackageData(parsedData);

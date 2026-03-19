@@ -13,13 +13,13 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/blogs/slug/${slug}`);
+        const response = await fetch(`https://andamanholidaytrips.in/api/blogs/slug/${slug}`);
         if (!response.ok) throw new Error('Blog not found');
         const result = await response.json();
         
         // Fix image path
         if (result.image && !result.image.startsWith('http')) {
-            result.image = `http://localhost:8000${result.image}`;
+            result.image = `https://andamanholidaytrips.in${result.image}`;
         }
         
         // Parse related posts if needed (though API returns JSON usually)

@@ -30,7 +30,7 @@ const ForgotPassword = () => {
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 mb-2">Check Your Email</h3>
                     <p className="text-gray-600 mb-6">We've sent password reset instructions to <strong>{email}</strong></p>
-                    <Link to="/admin" className="text-brand-blue font-bold hover:underline flex items-center justify-center gap-2">
+                    <Link to="/securelogin" className="text-brand-blue font-bold hover:underline flex items-center justify-center gap-2">
                         <ArrowLeft size={16} /> Back to Login
                     </Link>
                 </div>
@@ -59,7 +59,7 @@ const ForgotPassword = () => {
                     </button>
                     
                     <div className="text-center">
-                        <Link to="/admin" className="text-gray-600 hover:text-gray-900 text-sm flex items-center justify-center gap-2">
+                        <Link to="/securelogin" className="text-gray-600 hover:text-gray-900 text-sm flex items-center justify-center gap-2">
                             <ArrowLeft size={16} /> Back to Login
                         </Link>
                     </div>

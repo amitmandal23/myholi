@@ -15,7 +15,7 @@ const Navbar = () => {
     const fetchMenuData = async () => {
       try {
         // Fetch Packages
-        const pkgRes = await fetch('http://localhost:8000/api/packages?menu_only=true');
+        const pkgRes = await fetch('https://andamanholidaytrips.in/api/packages?menu_only=true');
         if (pkgRes.ok) {
           const pkgs = await pkgRes.json();
           const groupedPkgs = pkgs.reduce((acc, pkg) => {
@@ -34,14 +34,14 @@ const Navbar = () => {
         }
 
         // Fetch Destinations
-        const destRes = await fetch('http://localhost:8000/api/destinations?menu_only=true');
+        const destRes = await fetch('https://andamanholidaytrips.in/api/destinations?menu_only=true');
         if (destRes.ok) {
           const dests = await destRes.json();
           setDestinationsMenu(dests);
         }
 
         // Fetch Activities
-        const actRes = await fetch('http://localhost:8000/api/activities?menu_only=true');
+        const actRes = await fetch('https://andamanholidaytrips.in/api/activities?menu_only=true');
         if (actRes.ok) {
           const acts = await actRes.json();
           const groupedActs = acts.reduce((acc, act) => {
@@ -59,7 +59,7 @@ const Navbar = () => {
         }
 
         // Fetch Services (More Menu)
-        const servRes = await fetch('http://localhost:8000/api/services?menu_only=true');
+        const servRes = await fetch('https://andamanholidaytrips.in/api/services?menu_only=true');
         if (servRes.ok) {
           const servs = await servRes.json();
           setServicesMenu(servs);

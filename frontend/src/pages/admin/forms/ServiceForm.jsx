@@ -27,7 +27,7 @@ const ServiceForm = () => {
 
   const fetchService = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/services/${id}`);
+      const response = await fetch(`https://andamanholidaytrips.in/api/services/${id}`);
       if (!response.ok) throw new Error('Failed to fetch service');
       const data = await response.json();
       
@@ -86,8 +86,8 @@ const ServiceForm = () => {
     }
 
     const url = isEditMode 
-      ? `http://localhost:8000/api/services/${id}`
-      : 'http://localhost:8000/api/services';
+      ? `https://andamanholidaytrips.in/api/services/${id}`
+      : 'https://andamanholidaytrips.in/api/services';
 
     try {
       const response = await fetch(url, {

@@ -46,7 +46,7 @@ const ActivityBookingModal = ({ isOpen, onClose, activityName }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/api/inquiries', {
+      const response = await fetch('https://andamanholidaytrips.in/api/inquiries', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

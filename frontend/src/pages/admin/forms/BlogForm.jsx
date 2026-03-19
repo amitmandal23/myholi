@@ -29,7 +29,7 @@ const BlogForm = () => {
 
   const fetchBlog = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/blogs/${id}`);
+      const response = await fetch(`https://andamanholidaytrips.in/api/blogs/${id}`);
       if (!response.ok) throw new Error('Failed to fetch blog post');
       const data = await response.json();
       
@@ -87,8 +87,8 @@ const BlogForm = () => {
     }
 
     const url = isEditMode 
-      ? `http://localhost:8000/api/blogs/${id}`
-      : 'http://localhost:8000/api/blogs';
+      ? `https://andamanholidaytrips.in/api/blogs/${id}`
+      : 'https://andamanholidaytrips.in/api/blogs';
 
     try {
       const response = await fetch(url, {

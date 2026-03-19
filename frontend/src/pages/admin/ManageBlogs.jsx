@@ -13,7 +13,7 @@ const ManageBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/blogs');
+      const response = await fetch('https://andamanholidaytrips.in/api/blogs');
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
       }
@@ -29,7 +29,7 @@ const ManageBlogs = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this blog post?')) {
       try {
-        await fetch(`http://localhost:8000/api/blogs/${id}`, {
+        await fetch(`https://andamanholidaytrips.in/api/blogs/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -72,7 +72,7 @@ const ManageBlogs = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {blog.image ? (
-                       <img src={`http://localhost:8000${blog.image}`} alt={blog.title} className="h-full w-full object-cover" />
+                       <img src={`https://andamanholidaytrips.in${blog.image}`} alt={blog.title} className="h-full w-full object-cover" />
                      ) : (
                        <span className="text-xs text-gray-400 flex items-center justify-center h-full">No Img</span>
                      )}

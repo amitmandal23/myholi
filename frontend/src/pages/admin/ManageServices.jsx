@@ -13,7 +13,7 @@ const ManageServices = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/services');
+      const response = await fetch('https://andamanholidaytrips.in/api/services');
       if (!response.ok) {
         throw new Error('Failed to fetch services');
       }
@@ -29,7 +29,7 @@ const ManageServices = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
-        await fetch(`http://localhost:8000/api/services/${id}`, {
+        await fetch(`https://andamanholidaytrips.in/api/services/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -71,7 +71,7 @@ const ManageServices = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {service.image ? (
-                       <img src={`http://localhost:8000${service.image}`} alt={service.title} className="h-full w-full object-cover" />
+                       <img src={`https://andamanholidaytrips.in${service.image}`} alt={service.title} className="h-full w-full object-cover" />
                      ) : (
                        <span className="text-xs text-gray-400 flex items-center justify-center h-full">No Img</span>
                      )}

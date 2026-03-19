@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Send API requests to Laravel backend
+RewriteRule ^api/(.*)$ backend/public/index.php [L]
+
+# Allow existing files (JS, CSS, images, directories)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Frontend routing (React / Vite SPA) - handle all other requests
+RewriteRule ^(.*)$ index.html [L]

@@ -12,7 +12,7 @@ const TrendingPackages = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/packages');
+        const response = await fetch('https://andamanholidaytrips.in/api/packages');
         if (response.ok) {
           const data = await response.json();
           
@@ -25,7 +25,7 @@ const TrendingPackages = () => {
             title: pkg.title,
             duration: pkg.duration,
             image: pkg.featured_image && !pkg.featured_image.startsWith('http')
-                  ? `http://localhost:8000${pkg.featured_image}`
+                  ? `https://andamanholidaytrips.in${pkg.featured_image}`
                   : (pkg.featured_image || (pkg.images && pkg.images[0]) || '/img/hero-1.jpg'),
             type: pkg.category.replace('-', ' '),
             rating: 4.8, // Placeholder

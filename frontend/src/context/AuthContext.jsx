@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config/api';
 
 const AuthContext = createContext(null);
 
@@ -17,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async (authToken) => {
     try {
-      const response = await fetch('http://localhost:8000/api/user', {
+      const response = await fetch(API_ENDPOINTS.USER, {
         headers: {
           'Authorization': `Bearer ${authToken}`,
           'Accept': 'application/json'
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response = await fetch(API_ENDPOINTS.LOGIN, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, password_confirmation) => {
-      const response = await fetch('http://localhost:8000/api/register', {
+      const response = await fetch(API_ENDPOINTS.REGISTER, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -86,7 +87,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     if (token) {
         try {
-            await fetch('http://localhost:8000/api/logout', {
+            await fetch(API_ENDPOINTS.LOGOUT, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

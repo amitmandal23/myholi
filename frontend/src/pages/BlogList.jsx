@@ -14,12 +14,12 @@ const BlogList = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/blogs');
+      const response = await fetch('https://andamanholidaytrips.in/api/blogs');
       if (response.ok) {
         const data = await response.json();
         const processed = data.map(item => ({
             ...item,
-            image: item.image && !item.image.startsWith('http') ? `http://localhost:8000${item.image}` : item.image
+            image: item.image && !item.image.startsWith('http') ? `https://andamanholidaytrips.in${item.image}` : item.image
         }));
         setBlogs(processed);
       }

@@ -13,7 +13,7 @@ const ManageInquiries = () => {
 
   const fetchInquiries = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/inquiries');
+      const response = await fetch('https://andamanholidaytrips.in/api/inquiries');
       if (!response.ok) {
         throw new Error('Failed to fetch inquiries');
       }
@@ -29,7 +29,7 @@ const ManageInquiries = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this inquiry?')) {
       try {
-        await fetch(`http://localhost:8000/api/inquiries/${id}`, {
+        await fetch(`https://andamanholidaytrips.in/api/inquiries/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -44,7 +44,7 @@ const ManageInquiries = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/inquiries/${id}`, {
+      const response = await fetch(`https://andamanholidaytrips.in/api/inquiries/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

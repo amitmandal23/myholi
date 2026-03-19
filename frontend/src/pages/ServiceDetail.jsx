@@ -13,13 +13,13 @@ const ServiceDetail = () => {
   useEffect(() => {
     const fetchServiceData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/services/slug/${slug}`);
+        const response = await fetch(`https://andamanholidaytrips.in/api/services/slug/${slug}`);
         if (!response.ok) throw new Error('Service not found');
         const result = await response.json();
         
         // Fix image path
         if (result.image && !result.image.startsWith('http')) {
-            result.image = `http://localhost:8000${result.image}`;
+            result.image = `https://andamanholidaytrips.in${result.image}`;
         }
 
         // Parse features

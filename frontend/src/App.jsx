@@ -50,9 +50,17 @@ function App() {
           <Route path="/search" element={<SearchPage />} />
           
           {/* Auth Routes */}
-          <Route path="/admin" element={<Login />} />
+          <Route path="/securelogin" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* Redirect common admin paths to home */}
+          <Route path="/admin" element={<Home />} />
+          <Route path="/login" element={<Home />} />
+          <Route path="/auth" element={<Home />} />
+          <Route path="/signin" element={<Home />} />
+          <Route path="/administrator" element={<Home />} />
+          <Route path="/admin-login" element={<Home />} />
 
           {/* Admin Routes - Protected */}
           <Route path="/dashboard" element={

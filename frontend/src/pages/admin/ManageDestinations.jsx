@@ -13,7 +13,7 @@ const ManageDestinations = () => {
 
   const fetchDestinations = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/destinations');
+      const response = await fetch('https://andamanholidaytrips.in/api/destinations');
       if (!response.ok) {
         throw new Error('Failed to fetch destinations');
       }
@@ -29,7 +29,7 @@ const ManageDestinations = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this destination?')) {
       try {
-        await fetch(`http://localhost:8000/api/destinations/${id}`, {
+        await fetch(`https://andamanholidaytrips.in/api/destinations/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -71,7 +71,7 @@ const ManageDestinations = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {dest.hero_image ? (
-                       <img src={`http://localhost:8000${dest.hero_image}`} alt={dest.title} className="h-full w-full object-cover" />
+                       <img src={`https://andamanholidaytrips.in${dest.hero_image}`} alt={dest.title} className="h-full w-full object-cover" />
                      ) : (
                        <span className="text-xs text-gray-400 flex items-center justify-center h-full">No Img</span>
                      )}

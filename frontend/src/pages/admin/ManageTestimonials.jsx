@@ -13,7 +13,7 @@ const ManageTestimonials = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/testimonials');
+      const response = await fetch('https://andamanholidaytrips.in/api/testimonials');
       if (!response.ok) {
         throw new Error('Failed to fetch testimonials');
       }
@@ -29,7 +29,7 @@ const ManageTestimonials = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this testimonial?')) {
       try {
-        await fetch(`http://localhost:8000/api/testimonials/${id}`, {
+        await fetch(`https://andamanholidaytrips.in/api/testimonials/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -73,7 +73,7 @@ const ManageTestimonials = () => {
                   <div className="flex items-center">
                     <div className="h-10 w-10 flex-shrink-0">
                       {item.image ? (
-                         <img className="h-10 w-10 rounded-full object-cover" src={`http://localhost:8000${item.image}`} alt={item.name} />
+                         <img className="h-10 w-10 rounded-full object-cover" src={`https://andamanholidaytrips.in${item.image}`} alt={item.name} />
                       ) : (
                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">No Img</div>
                       )}

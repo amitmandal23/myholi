@@ -2,10 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
+import { useAuth } from '../../../context/AuthContext';
+import { API_ENDPOINTS } from '../../../config/api';
 
 const PackageForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { token } = useAuth();
   const isEditMode = !!id;
   
   const [loading, setLoading] = useState(false);
@@ -41,7 +44,12 @@ const PackageForm = () => {
 
   const fetchPackage = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/packages/${id}`);
+      const response = await fetch(`${API_ENDPOINTS.PACKAGES}/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch package');
       const data = await response.json();
       
@@ -171,14 +179,15 @@ const PackageForm = () => {
     }
 
     const url = isEditMode 
-      ? `http://localhost:8000/api/packages/${id}`
-      : 'http://localhost:8000/api/packages';
+      ? `${API_ENDPOINTS.PACKAGES}/${id}`
+      : API_ENDPOINTS.PACKAGES;
 
     try {
       const response = await fetch(url, {
         method: 'POST', // Always POST for FormData with files, use _method for PUT
         headers: {
           'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: data,
       });
@@ -300,7 +309,7 @@ const PackageForm = () => {
              {formData.featured_image && typeof formData.featured_image === 'string' && (
                 <div className="mt-2 w-32 h-20">
                     <img 
-                        src={formData.featured_image.startsWith('http') ? formData.featured_image : `http://localhost:8000${formData.featured_image}`} 
+                        src={formData.featured_image.startsWith('http') ? formData.featured_image : `https://andamanholidaytrips.in${formData.featured_image}`} 
                         alt="Current Featured" 
                         className="w-full h-full object-cover rounded border"
                     />
@@ -321,7 +330,7 @@ const PackageForm = () => {
                     {existingGalleryImages.map((img, idx) => (
                         <div key={idx} className="relative w-16 h-16">
                             <img 
-                                src={img && img.startsWith('http') ? img : `http://localhost:8000${img || ''}`} 
+                                src={img && img.startsWith('http') ? img : `https://andamanholidaytrips.in${img || ''}`} 
                                 alt={`Gallery ${idx}`} 
                                 className="w-full h-full object-cover rounded border"
                             />

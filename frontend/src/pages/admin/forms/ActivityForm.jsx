@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Loader } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
+import { useAuth } from '../../../context/AuthContext';
+import { API_ENDPOINTS } from '../../../config/api';
 
 const ActivityForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { token } = useAuth();
   const isEditMode = !!id;
   
   const [loading, setLoading] = useState(false);
@@ -38,7 +41,12 @@ const ActivityForm = () => {
 
   const fetchActivity = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/activities/${id}`);
+      const response = await fetch(`${API_ENDPOINTS.ACTIVITIES}/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch activity');
       const data = await response.json();
       
@@ -49,6 +57,17 @@ const ActivityForm = () => {
         parsedImages = [];
       }
       setExistingGalleryImages(parsedImages);
+
+      // Helper to convert legacy JSON/Array to HTML for RTE
+      const toHtml = (val) => {
+        if (!val) return '';
+        if (Array.isArray(val)) return `<ul>${val.map(i => `<li>${i}</li>`).join('')}</ul>`;
+        try {
+             const parsed = JSON.parse(val);
+             if (Array.isArray(parsed)) return `<ul>${parsed.map(i => `<li>${i}</li>`).join('')}</ul>`;
+             return val;
+        } catch { return val; }
+      };
 
       setFormData({
         ...data,
@@ -119,14 +138,15 @@ const ActivityForm = () => {
     }
 
     const url = isEditMode 
-      ? `http://localhost:8000/api/activities/${id}`
-      : 'http://localhost:8000/api/activities';
+      ? `${API_ENDPOINTS.ACTIVITIES}/${id}`
+      : API_ENDPOINTS.ACTIVITIES;
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: data,
       });
@@ -246,7 +266,7 @@ const ActivityForm = () => {
                     {existingGalleryImages.map((img, idx) => (
                         <div key={idx} className="relative w-16 h-16">
                             <img 
-                                src={img.startsWith('http') ? img : `http://localhost:8000${img}`} 
+                                src={img.startsWith('http') ? img : `https://andamanholidaytrips.in${img}`} 
                                 alt={`Gallery ${idx}`} 
                                 className="w-full h-full object-cover rounded border"
                             />

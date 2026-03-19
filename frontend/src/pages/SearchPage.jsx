@@ -28,7 +28,7 @@ const SearchPage = () => {
         if (category && category !== 'All Types') params.append('category', category);
         if (searchQuery) params.append('search', searchQuery);
 
-        const response = await fetch(`http://localhost:8000/api/packages?${params.toString()}`);
+        const response = await fetch(`https://andamanholidaytrips.in/api/packages?${params.toString()}`);
         if (response.ok) {
           const data = await response.json();
           // Map data
@@ -39,7 +39,7 @@ const SearchPage = () => {
             price: pkg.price ? `₹${Number(pkg.price).toLocaleString('en-IN')}` : 'Get Quote',
             discounted_price: pkg.discounted_price ? `₹${Number(pkg.discounted_price).toLocaleString('en-IN')}` : null,
             image: pkg.featured_image && !pkg.featured_image.startsWith('http')
-                  ? `http://localhost:8000${pkg.featured_image}`
+                  ? `https://andamanholidaytrips.in${pkg.featured_image}`
                   : (pkg.featured_image || (pkg.images && pkg.images[0]) || '/img/hero-1.jpg'),
             type: pkg.category.replace('-', ' '),
             rating: 4.8, 

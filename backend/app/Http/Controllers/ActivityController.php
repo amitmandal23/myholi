@@ -48,8 +48,26 @@ class ActivityController extends Controller
             }
 
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('activities', 'public');
-                $activity->featured_image = '/storage/' . $path;
+                $file = $request->file('image');
+                if ($file->isValid()) {
+                    // Create direct path without symbolic link
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $directory = public_path('storage/activities');
+                    
+                    // Create directory if it doesn't exist
+                    if (!is_dir($directory)) {
+                        mkdir($directory, 0755, true);
+                    }
+                    
+                    // Move file directly to public/storage
+                    $file->move($directory, $filename);
+                    $activity->featured_image = '/storage/activities/' . $filename;
+                } else {
+                    \Log::error('Activity image upload failed', [
+                        'error' => $file->getErrorMessage(),
+                        'originalName' => $file->getClientOriginalName()
+                    ]);
+                }
             }
 
             $activity->save();
@@ -80,8 +98,25 @@ class ActivityController extends Controller
             
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $file) {
-                    $path = $file->store('activities/gallery', 'public');
-                    $currentImages[] = '/storage/' . $path;
+                    if ($file->isValid()) {
+                        // Create direct path without symbolic link
+                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                        $directory = public_path('storage/activities/gallery');
+                        
+                        // Create directory if it doesn't exist
+                        if (!is_dir($directory)) {
+                            mkdir($directory, 0755, true);
+                        }
+                        
+                        // Move file directly to public/storage
+                        $file->move($directory, $filename);
+                        $currentImages[] = '/storage/activities/gallery/' . $filename;
+                    } else {
+                        \Log::error('Activity gallery image upload failed', [
+                            'error' => $file->getErrorMessage(),
+                            'originalName' => $file->getClientOriginalName()
+                        ]);
+                    }
                 }
             }
             // Update images field with merged array
@@ -95,8 +130,26 @@ class ActivityController extends Controller
             $activity->fill($data);
             
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('activities', 'public');
-                $activity->featured_image = '/storage/' . $path;
+                $file = $request->file('image');
+                if ($file->isValid()) {
+                    // Create direct path without symbolic link
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $directory = public_path('storage/activities');
+                    
+                    // Create directory if it doesn't exist
+                    if (!is_dir($directory)) {
+                        mkdir($directory, 0755, true);
+                    }
+                    
+                    // Move file directly to public/storage
+                    $file->move($directory, $filename);
+                    $activity->featured_image = '/storage/activities/' . $filename;
+                } else {
+                    \Log::error('Activity image upload failed in update', [
+                        'error' => $file->getErrorMessage(),
+                        'originalName' => $file->getClientOriginalName()
+                    ]);
+                }
             }
 
             $activity->save();

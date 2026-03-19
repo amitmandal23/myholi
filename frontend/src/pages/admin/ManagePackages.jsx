@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS } from '../../config/api';
 
 const ManagePackages = () => {
   const [packages, setPackages] = useState([]);
@@ -13,7 +14,7 @@ const ManagePackages = () => {
 
   const fetchPackages = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/packages');
+      const response = await fetch(API_ENDPOINTS.PACKAGES);
       if (!response.ok) {
         throw new Error('Failed to fetch packages');
       }
@@ -29,7 +30,7 @@ const ManagePackages = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this package?')) {
       try {
-        await fetch(`http://localhost:8000/api/packages/${id}`, {
+        await fetch(`${API_ENDPOINTS.PACKAGES}/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
@@ -74,7 +75,7 @@ const ManagePackages = () => {
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {pkg.featured_image ? (
                        <img 
-                        src={pkg.featured_image.startsWith('http') ? pkg.featured_image : `http://localhost:8000${pkg.featured_image}`} 
+                        src={pkg.featured_image.startsWith('http') ? pkg.featured_image : `https://andamanholidaytrips.in${pkg.featured_image}`} 
                         alt={pkg.title} 
                         className="h-full w-full object-cover" 
                        />

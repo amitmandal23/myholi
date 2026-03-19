@@ -30,7 +30,7 @@ const DestinationForm = () => {
 
   const fetchDestination = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/destinations/${id}`);
+      const response = await fetch(`https://andamanholidaytrips.in/api/destinations/${id}`);
       if (!response.ok) throw new Error('Failed to fetch destination');
       const data = await response.json();
       
@@ -108,8 +108,8 @@ const DestinationForm = () => {
     }
 
     const url = isEditMode 
-      ? `http://localhost:8000/api/destinations/${id}`
-      : 'http://localhost:8000/api/destinations';
+      ? `https://andamanholidaytrips.in/api/destinations/${id}`
+      : 'https://andamanholidaytrips.in/api/destinations';
 
     try {
       const response = await fetch(url, {

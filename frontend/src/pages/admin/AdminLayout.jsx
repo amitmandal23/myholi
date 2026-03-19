@@ -21,7 +21,7 @@ const AdminLayout = () => {
   
   const handleLogout = () => {
     logout();
-    navigate('/admin');
+    navigate('/securelogin');
   };
   
   const isActive = (path) => {
