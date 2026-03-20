@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Loader } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
+import { useAuth } from '../../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../../config/api';
 
 const ServiceForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { token } = useAuth();
   const isEditMode = !!id;
   
   const [loading, setLoading] = useState(false);
@@ -27,7 +30,12 @@ const ServiceForm = () => {
 
   const fetchService = async () => {
     try {
-      const response = await fetch(`https://andamanholidaytrips.in/api/services/${id}`);
+      const response = await fetch(`${API_ENDPOINTS.SERVICES}/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch service');
       const data = await response.json();
       
@@ -86,13 +94,14 @@ const ServiceForm = () => {
     }
 
     const url = isEditMode 
-      ? `https://andamanholidaytrips.in/api/services/${id}`
-      : 'https://andamanholidaytrips.in/api/services';
+      ? `${API_ENDPOINTS.SERVICES}/${id}`
+      : API_ENDPOINTS.SERVICES;
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
         },
         body: data,

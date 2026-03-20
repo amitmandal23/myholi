@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Phone, MapPin, Calendar, X, MessageSquareText } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api';
 
 const FloatingPlanButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +32,7 @@ const FloatingPlanButton = () => {
     };
 
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/inquiries', {
+      const response = await fetch(API_ENDPOINTS.INQUIRIES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

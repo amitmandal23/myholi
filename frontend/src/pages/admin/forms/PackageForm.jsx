@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
 import { useAuth } from '../../../context/AuthContext';
-import { API_ENDPOINTS } from '../../../config/api';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../../config/api';
 
 const PackageForm = () => {
   const navigate = useNavigate();
@@ -146,6 +146,23 @@ const PackageForm = () => {
     const newItems = [...itineraryItems];
     newItems[index] = { ...newItems[index], [field]: value };
     setItineraryItems(newItems);
+  };
+
+  const removeExistingGalleryImage = (index) => {
+    try {
+        let imgs = formData.images;
+        if (typeof imgs === 'string') {
+            imgs = JSON.parse(imgs);
+        }
+        if (!Array.isArray(imgs)) imgs = [];
+        const newImgs = imgs.filter((_, i) => i !== index);
+        setFormData(prev => ({
+            ...prev,
+            images: JSON.stringify(newImgs)
+        }));
+    } catch (e) {
+        console.error("Error removing image", e);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -309,7 +326,7 @@ const PackageForm = () => {
              {formData.featured_image && typeof formData.featured_image === 'string' && (
                 <div className="mt-2 w-32 h-20">
                     <img 
-                        src={formData.featured_image.startsWith('http') ? formData.featured_image : `https://andamanholidaytrips.in${formData.featured_image}`} 
+                        src={formData.featured_image.startsWith('http') ? formData.featured_image : `${IMAGE_BASE_URL}${formData.featured_image}`} 
                         alt="Current Featured" 
                         className="w-full h-full object-cover rounded border"
                     />
@@ -328,12 +345,19 @@ const PackageForm = () => {
              {existingGalleryImages.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                     {existingGalleryImages.map((img, idx) => (
-                        <div key={idx} className="relative w-16 h-16">
+                        <div key={idx} className="relative w-16 h-16 group">
                             <img 
-                                src={img && img.startsWith('http') ? img : `https://andamanholidaytrips.in${img || ''}`} 
+                                src={img && img.startsWith('http') ? img : `${IMAGE_BASE_URL}${img || ''}`} 
                                 alt={`Gallery ${idx}`} 
                                 className="w-full h-full object-cover rounded border"
                             />
+                            <button 
+                                type="button"
+                                onClick={() => removeExistingGalleryImage(idx)}
+                                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <Trash2 size={12} />
+                            </button>
                         </div>
                     ))}
                 </div>

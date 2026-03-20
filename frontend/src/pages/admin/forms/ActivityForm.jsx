@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, X, Loader } from 'lucide-react';
+import { Save, X, Loader, Trash2 } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
 import { useAuth } from '../../../context/AuthContext';
-import { API_ENDPOINTS } from '../../../config/api';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../../config/api';
 
 const ActivityForm = () => {
   const navigate = useNavigate();
@@ -100,7 +100,16 @@ const ActivityForm = () => {
   };
 
   const handleGalleryChange = (e) => {
-    setGalleryImages([...e.target.files]);
+    setGalleryImages(e.target.files);
+  };
+
+  const removeExistingGalleryImage = (index) => {
+    const newImgs = existingGalleryImages.filter((_, i) => i !== index);
+    setExistingGalleryImages(newImgs);
+    setFormData(prev => ({
+        ...prev,
+        images: JSON.stringify(newImgs)
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -239,6 +248,15 @@ const ActivityForm = () => {
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
               accept="image/*"
             />
+             {formData.featured_image && typeof formData.featured_image === 'string' && (
+                <div className="mt-2 w-32 h-20">
+                    <img 
+                        src={formData.featured_image.startsWith('http') ? formData.featured_image : `${IMAGE_BASE_URL}${formData.featured_image}`} 
+                        alt="Current Featured" 
+                        className="w-full h-full object-cover rounded border"
+                    />
+                </div>
+            )}
           </div>
           <div className="flex items-center gap-4">
              <label className="flex items-center gap-2 cursor-pointer">
@@ -264,12 +282,19 @@ const ActivityForm = () => {
             {existingGalleryImages.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                     {existingGalleryImages.map((img, idx) => (
-                        <div key={idx} className="relative w-16 h-16">
+                        <div key={idx} className="relative w-16 h-16 group">
                             <img 
-                                src={img.startsWith('http') ? img : `https://andamanholidaytrips.in${img}`} 
+                                src={img.startsWith('http') ? img : `${IMAGE_BASE_URL}${img}`} 
                                 alt={`Gallery ${idx}`} 
                                 className="w-full h-full object-cover rounded border"
                             />
+                            <button 
+                                type="button"
+                                onClick={() => removeExistingGalleryImage(idx)}
+                                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <Trash2 size={12} />
+                            </button>
                         </div>
                     ))}
                 </div>

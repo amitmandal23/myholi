@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, MapPin, User, Phone, Mail, Minus, Plus, Calendar } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api';
 
 const ActivityBookingModal = ({ isOpen, onClose, activityName }) => {
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ const ActivityBookingModal = ({ isOpen, onClose, activityName }) => {
     };
 
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/inquiries', {
+      const response = await fetch(API_ENDPOINTS.INQUIRIES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

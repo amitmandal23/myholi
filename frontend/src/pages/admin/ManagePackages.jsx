@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { API_ENDPOINTS } from '../../config/api';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../config/api';
 
 const ManagePackages = () => {
+  const { token } = useAuth();
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchPackages();
-  }, []);
+    if (token) {
+        fetchPackages();
+    }
+  }, [token]);
 
   const fetchPackages = async () => {
     try {
-      const response = await fetch(API_ENDPOINTS.PACKAGES);
+      const response = await fetch(API_ENDPOINTS.PACKAGES, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch packages');
       }
@@ -33,6 +42,7 @@ const ManagePackages = () => {
         await fetch(`${API_ENDPOINTS.PACKAGES}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -75,7 +85,7 @@ const ManagePackages = () => {
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {pkg.featured_image ? (
                        <img 
-                        src={pkg.featured_image.startsWith('http') ? pkg.featured_image : `https://andamanholidaytrips.in${pkg.featured_image}`} 
+                        src={pkg.featured_image.startsWith('http') ? pkg.featured_image : `${IMAGE_BASE_URL}${pkg.featured_image}`} 
                         alt={pkg.title} 
                         className="h-full w-full object-cover" 
                        />

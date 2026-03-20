@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, MapPin, User, Phone, Mail, Minus, Plus } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api';
 
 const BookingModal = ({ isOpen, onClose, packageName, title = "Want to Go For A Memorable Holiday?" }) => {
   const [formData, setFormData] = useState({
@@ -45,7 +46,7 @@ const BookingModal = ({ isOpen, onClose, packageName, title = "Want to Go For A 
     };
 
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/inquiries', {
+      const response = await fetch(API_ENDPOINTS.INQUIRIES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

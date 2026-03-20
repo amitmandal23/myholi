@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Calendar, User, Clock, ArrowRight } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -13,13 +14,13 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const response = await fetch(`https://andamanholidaytrips.in/api/blogs/slug/${slug}`);
+        const response = await fetch(API_ENDPOINTS.BLOG_BY_SLUG(slug));
         if (!response.ok) throw new Error('Blog not found');
         const result = await response.json();
         
         // Fix image path
         if (result.image && !result.image.startsWith('http')) {
-            result.image = `https://andamanholidaytrips.in${result.image}`;
+            result.image = `${IMAGE_BASE_URL}${result.image}`;
         }
         
         // Parse related posts if needed (though API returns JSON usually)

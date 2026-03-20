@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../config/api';
 
 const ManageTestimonials = () => {
+  const { token } = useAuth();
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchTestimonials();
-  }, []);
+    if (token) {
+        fetchTestimonials();
+    }
+  }, [token]);
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/testimonials');
+      const response = await fetch(API_ENDPOINTS.TESTIMONIALS, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch testimonials');
       }
@@ -29,9 +39,10 @@ const ManageTestimonials = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this testimonial?')) {
       try {
-        await fetch(`https://andamanholidaytrips.in/api/testimonials/${id}`, {
+        await fetch(`${API_ENDPOINTS.TESTIMONIALS}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -61,8 +72,7 @@ const ManageTestimonials = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comment</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -73,7 +83,7 @@ const ManageTestimonials = () => {
                   <div className="flex items-center">
                     <div className="h-10 w-10 flex-shrink-0">
                       {item.image ? (
-                         <img className="h-10 w-10 rounded-full object-cover" src={`https://andamanholidaytrips.in${item.image}`} alt={item.name} />
+                         <img className="h-10 w-10 rounded-full object-cover" src={`${IMAGE_BASE_URL}${item.image}`} alt={item.name} />
                       ) : (
                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">No Img</div>
                       )}

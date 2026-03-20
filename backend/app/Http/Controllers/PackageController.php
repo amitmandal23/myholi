@@ -214,18 +214,8 @@ class PackageController extends Controller
             if ($request->hasFile('featured_image')) {
                 $file = $request->file('featured_image');
                 if ($file->isValid()) {
-                    // Create direct path without symbolic link
-                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $directory = public_path('storage/packages');
-                    
-                    // Create directory if it doesn't exist
-                    if (!is_dir($directory)) {
-                        mkdir($directory, 0755, true);
-                    }
-                    
-                    // Move file directly to public/storage
-                    $file->move($directory, $filename);
-                    $package->featured_image = '/storage/packages/' . $filename;
+                    $path = $file->store('packages', 'public');
+                    $package->featured_image = '/storage/' . $path;
                 } else {
                     \Log::error('Featured image upload failed in update', [
                         'error' => $file->getErrorMessage(),
@@ -235,26 +225,27 @@ class PackageController extends Controller
             }
 
             // Handle Gallery Images Update
-            $currentImages = $package->images ?? [];
-            if (is_string($currentImages)) {
-                $currentImages = json_decode($currentImages, true) ?? [];
+            // If the request has 'images', it contains the updated list of existing images (after any deletions)
+            $currentImages = [];
+            if ($request->has('images')) {
+                $reqImages = $request->images;
+                if (is_string($reqImages)) {
+                    $currentImages = json_decode($reqImages, true) ?? [];
+                } else {
+                    $currentImages = $reqImages;
+                }
+            } else {
+                $currentImages = $package->images ?? [];
+                if (is_string($currentImages)) {
+                    $currentImages = json_decode($currentImages, true) ?? [];
+                }
             }
             
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $file) {
                     if ($file->isValid()) {
-                        // Create direct path without symbolic link
-                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                        $directory = public_path('storage/packages/gallery');
-                        
-                        // Create directory if it doesn't exist
-                        if (!is_dir($directory)) {
-                            mkdir($directory, 0755, true);
-                        }
-                        
-                        // Move file directly to public/storage
-                        $file->move($directory, $filename);
-                        $currentImages[] = '/storage/packages/gallery/' . $filename;
+                        $path = $file->store('packages/gallery', 'public');
+                        $currentImages[] = '/storage/' . $path;
                     } else {
                         \Log::error('Gallery image upload failed in update', [
                             'error' => $file->getErrorMessage(),

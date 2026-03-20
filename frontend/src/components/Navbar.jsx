@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Phone, ChevronDown, Minus, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS } from '../config/api';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ const Navbar = () => {
     const fetchMenuData = async () => {
       try {
         // Fetch Packages
-        const pkgRes = await fetch('https://andamanholidaytrips.in/api/packages?menu_only=true');
+        const pkgRes = await fetch(`${API_ENDPOINTS.PACKAGES}?menu_only=true`);
         if (pkgRes.ok) {
           const pkgs = await pkgRes.json();
           const groupedPkgs = pkgs.reduce((acc, pkg) => {
@@ -34,14 +35,14 @@ const Navbar = () => {
         }
 
         // Fetch Destinations
-        const destRes = await fetch('https://andamanholidaytrips.in/api/destinations?menu_only=true');
+        const destRes = await fetch(`${API_ENDPOINTS.DESTINATIONS}?menu_only=true`);
         if (destRes.ok) {
           const dests = await destRes.json();
           setDestinationsMenu(dests);
         }
 
         // Fetch Activities
-        const actRes = await fetch('https://andamanholidaytrips.in/api/activities?menu_only=true');
+        const actRes = await fetch(`${API_ENDPOINTS.ACTIVITIES}?menu_only=true`);
         if (actRes.ok) {
           const acts = await actRes.json();
           const groupedActs = acts.reduce((acc, act) => {
@@ -59,7 +60,7 @@ const Navbar = () => {
         }
 
         // Fetch Services (More Menu)
-        const servRes = await fetch('https://andamanholidaytrips.in/api/services?menu_only=true');
+        const servRes = await fetch(`${API_ENDPOINTS.SERVICES}?menu_only=true`);
         if (servRes.ok) {
           const servs = await servRes.json();
           setServicesMenu(servs);

@@ -91,26 +91,27 @@ class ActivityController extends Controller
             $data = $request->except(['slug', 'image', 'gallery_images']);
             
             // Handle Gallery Images Update
-            $currentImages = $activity->images ?? [];
-            if (is_string($currentImages)) {
-                $currentImages = json_decode($currentImages, true) ?? [];
+            // If the request has 'images', it contains the updated list of existing images (after any deletions)
+            $currentImages = [];
+            if ($request->has('images')) {
+                $reqImages = $request->images;
+                if (is_string($reqImages)) {
+                    $currentImages = json_decode($reqImages, true) ?? [];
+                } else {
+                    $currentImages = $reqImages;
+                }
+            } else {
+                $currentImages = $activity->images ?? [];
+                if (is_string($currentImages)) {
+                    $currentImages = json_decode($currentImages, true) ?? [];
+                }
             }
             
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $file) {
                     if ($file->isValid()) {
-                        // Create direct path without symbolic link
-                        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                        $directory = public_path('storage/activities/gallery');
-                        
-                        // Create directory if it doesn't exist
-                        if (!is_dir($directory)) {
-                            mkdir($directory, 0755, true);
-                        }
-                        
-                        // Move file directly to public/storage
-                        $file->move($directory, $filename);
-                        $currentImages[] = '/storage/activities/gallery/' . $filename;
+                        $path = $file->store('activities/gallery', 'public');
+                        $currentImages[] = '/storage/' . $path;
                     } else {
                         \Log::error('Activity gallery image upload failed', [
                             'error' => $file->getErrorMessage(),
@@ -132,18 +133,8 @@ class ActivityController extends Controller
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 if ($file->isValid()) {
-                    // Create direct path without symbolic link
-                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $directory = public_path('storage/activities');
-                    
-                    // Create directory if it doesn't exist
-                    if (!is_dir($directory)) {
-                        mkdir($directory, 0755, true);
-                    }
-                    
-                    // Move file directly to public/storage
-                    $file->move($directory, $filename);
-                    $activity->featured_image = '/storage/activities/' . $filename;
+                    $path = $file->store('activities', 'public');
+                    $activity->featured_image = '/storage/' . $path;
                 } else {
                     \Log::error('Activity image upload failed in update', [
                         'error' => $file->getErrorMessage(),

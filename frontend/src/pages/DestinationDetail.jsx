@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import SEO from '../components/common/SEO';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 
 const DestinationDetail = () => {
   const { slug } = useParams();
@@ -17,7 +18,7 @@ const DestinationDetail = () => {
   useEffect(() => {
     const fetchDestinationData = async () => {
       try {
-        const response = await fetch(`https://andamanholidaytrips.in/api/destinations/slug/${slug}`);
+        const response = await fetch(API_ENDPOINTS.DESTINATION_BY_SLUG(slug));
         if (!response.ok) throw new Error('Destination not found');
         const result = await response.json();
         
@@ -58,7 +59,7 @@ const DestinationDetail = () => {
 
         // Fix image paths if needed
         if (parsedData.hero_image && !parsedData.hero_image.startsWith('http')) {
-            parsedData.heroImage = `https://andamanholidaytrips.in${parsedData.hero_image}`;
+            parsedData.heroImage = `${IMAGE_BASE_URL}${parsedData.hero_image}`;
         } else {
             parsedData.heroImage = parsedData.hero_image;
         }

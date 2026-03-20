@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Loader } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
+import { useAuth } from '../../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../../config/api';
 
 const DestinationForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { token } = useAuth();
   const isEditMode = !!id;
   
   const [loading, setLoading] = useState(false);
@@ -30,7 +33,12 @@ const DestinationForm = () => {
 
   const fetchDestination = async () => {
     try {
-      const response = await fetch(`https://andamanholidaytrips.in/api/destinations/${id}`);
+      const response = await fetch(`${API_ENDPOINTS.DESTINATIONS}/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch destination');
       const data = await response.json();
       
@@ -108,13 +116,14 @@ const DestinationForm = () => {
     }
 
     const url = isEditMode 
-      ? `https://andamanholidaytrips.in/api/destinations/${id}`
-      : 'https://andamanholidaytrips.in/api/destinations';
+      ? `${API_ENDPOINTS.DESTINATIONS}/${id}`
+      : API_ENDPOINTS.DESTINATIONS;
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
         },
         body: data,

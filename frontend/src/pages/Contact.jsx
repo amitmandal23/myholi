@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Phone, Mail, MapPin, Send } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { API_ENDPOINTS } from '../config/api';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const Contact = () => {
     };
 
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/inquiries', {
+      const response = await fetch(API_ENDPOINTS.INQUIRIES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

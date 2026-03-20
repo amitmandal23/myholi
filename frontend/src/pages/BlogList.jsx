@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Loader, Calendar, User, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 
 const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,12 +15,12 @@ const BlogList = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/blogs');
+      const response = await fetch(API_ENDPOINTS.BLOGS);
       if (response.ok) {
         const data = await response.json();
         const processed = data.map(item => ({
             ...item,
-            image: item.image && !item.image.startsWith('http') ? `https://andamanholidaytrips.in${item.image}` : item.image
+            image: item.image && !item.image.startsWith('http') ? `${IMAGE_BASE_URL}${item.image}` : item.image
         }));
         setBlogs(processed);
       }

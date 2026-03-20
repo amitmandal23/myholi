@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../config/api';
 
 const ManageActivities = () => {
+  const { token } = useAuth();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchActivities();
-  }, []);
+    if (token) {
+        fetchActivities();
+    }
+  }, [token]);
 
   const fetchActivities = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/activities');
+      const response = await fetch(API_ENDPOINTS.ACTIVITIES, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch activities');
       }
@@ -29,9 +39,10 @@ const ManageActivities = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this activity?')) {
       try {
-        await fetch(`https://andamanholidaytrips.in/api/activities/${id}`, {
+        await fetch(`${API_ENDPOINTS.ACTIVITIES}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -74,7 +85,7 @@ const ManageActivities = () => {
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {act.featured_image || act.image ? (
                        <img 
-                         src={`https://andamanholidaytrips.in${act.featured_image || act.image}`} 
+                         src={`${IMAGE_BASE_URL}${act.featured_image || act.image}`} 
                          alt={act.title} 
                          className="h-full w-full object-cover"
                          onError={(e) => {

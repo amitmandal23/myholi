@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Loader } from 'lucide-react';
 import RichTextEditor from '../../../components/common/RichTextEditor';
+import { useAuth } from '../../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../../config/api';
 
 const TestimonialForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { token } = useAuth();
   const isEditMode = !!id;
   
   const [loading, setLoading] = useState(false);
@@ -28,7 +31,12 @@ const TestimonialForm = () => {
 
   const fetchTestimonial = async () => {
     try {
-      const response = await fetch(`https://andamanholidaytrips.in/api/testimonials/${id}`);
+      const response = await fetch(`${API_ENDPOINTS.TESTIMONIALS}/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch testimonial');
       const data = await response.json();
       setFormData(data);
@@ -78,13 +86,14 @@ const TestimonialForm = () => {
     }
 
     const url = isEditMode 
-      ? `https://andamanholidaytrips.in/api/testimonials/${id}`
-      : 'https://andamanholidaytrips.in/api/testimonials';
+      ? `${API_ENDPOINTS.TESTIMONIALS}/${id}`
+      : API_ENDPOINTS.TESTIMONIALS;
 
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
         },
         body: data,

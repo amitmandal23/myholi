@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../config/api';
 
 const ManageDestinations = () => {
+  const { token } = useAuth();
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchDestinations();
-  }, []);
+    if (token) {
+        fetchDestinations();
+    }
+  }, [token]);
 
   const fetchDestinations = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/destinations');
+      const response = await fetch(API_ENDPOINTS.DESTINATIONS, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch destinations');
       }
@@ -29,9 +39,10 @@ const ManageDestinations = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this destination?')) {
       try {
-        await fetch(`https://andamanholidaytrips.in/api/destinations/${id}`, {
+        await fetch(`${API_ENDPOINTS.DESTINATIONS}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -71,7 +82,7 @@ const ManageDestinations = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {dest.hero_image ? (
-                       <img src={`https://andamanholidaytrips.in${dest.hero_image}`} alt={dest.title} className="h-full w-full object-cover" />
+                       <img src={`${IMAGE_BASE_URL}${dest.hero_image}`} alt={dest.title} className="h-full w-full object-cover" />
                      ) : (
                        <span className="text-xs text-gray-400 flex items-center justify-center h-full">No Img</span>
                      )}

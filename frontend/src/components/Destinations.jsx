@@ -3,6 +3,7 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -12,14 +13,14 @@ const Destinations = () => {
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
-        const response = await fetch('https://andamanholidaytrips.in/api/destinations');
+        const response = await fetch(API_ENDPOINTS.DESTINATIONS);
         if (response.ok) {
           const data = await response.json();
           const mappedData = data.slice(0, 4).map(dest => ({
             name: dest.title,
             description: dest.description.substring(0, 50) + '...',
             image: dest.hero_image && !dest.hero_image.startsWith('http') 
-                  ? `https://andamanholidaytrips.in${dest.hero_image}` 
+                  ? `${IMAGE_BASE_URL}${dest.hero_image}` 
                   : dest.hero_image,
             count: "View Details", // Placeholder as API doesn't return count yet
             slug: dest.slug

@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../config/api';
 
 const ManageBlogs = () => {
+  const { token } = useAuth();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchBlogs();
-  }, []);
+    if (token) {
+        fetchBlogs();
+    }
+  }, [token]);
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/blogs');
+      const response = await fetch(API_ENDPOINTS.BLOGS, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
       }
@@ -29,9 +39,10 @@ const ManageBlogs = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this blog post?')) {
       try {
-        await fetch(`https://andamanholidaytrips.in/api/blogs/${id}`, {
+        await fetch(`${API_ENDPOINTS.BLOGS}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -51,7 +62,7 @@ const ManageBlogs = () => {
         <h2 className="text-2xl font-bold text-gray-800">Manage Blogs</h2>
         <Link to="/dashboard/blogs/create" className="bg-brand-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-brand-blue/90">
           <Plus size={20} />
-          Add New Blog Post
+          Add New Post
         </Link>
       </div>
 
@@ -61,8 +72,8 @@ const ManageBlogs = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Published At</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -72,7 +83,7 @@ const ManageBlogs = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {blog.image ? (
-                       <img src={`https://andamanholidaytrips.in${blog.image}`} alt={blog.title} className="h-full w-full object-cover" />
+                       <img src={`${IMAGE_BASE_URL}${blog.image}`} alt={blog.title} className="h-full w-full object-cover" />
                      ) : (
                        <span className="text-xs text-gray-400 flex items-center justify-center h-full">No Img</span>
                      )}

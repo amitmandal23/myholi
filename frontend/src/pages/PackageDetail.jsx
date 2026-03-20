@@ -15,6 +15,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import SEO from '../components/common/SEO';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 
 const PackageDetail = () => {
   const { category, slug } = useParams();
@@ -28,7 +29,7 @@ const PackageDetail = () => {
     // Fetch data based on URL params
     const fetchPackageData = async () => {
       try {
-        const response = await fetch(`https://andamanholidaytrips.in/api/packages/${category}/${slug}`, {
+        const response = await fetch(API_ENDPOINTS.PACKAGE_BY_SLUG(category, slug), {
             headers: {
                 'Accept': 'application/json'
             }
@@ -72,10 +73,10 @@ const PackageDetail = () => {
 
         // If no images in gallery, use featured_image as first slide
         if (!parsedData.images || parsedData.images.length === 0) {
-            parsedData.images = parsedData.featured_image ? [`https://andamanholidaytrips.in${parsedData.featured_image}`] : [];
+            parsedData.images = parsedData.featured_image ? [`${IMAGE_BASE_URL}${parsedData.featured_image}`] : [];
         } else {
              // Prepend base URL to images if needed
-             parsedData.images = parsedData.images.map(img => img.startsWith('http') ? img : `https://andamanholidaytrips.in${img}`);
+             parsedData.images = parsedData.images.map(img => img.startsWith('http') ? img : `${IMAGE_BASE_URL}${img}`);
         }
 
         setPackageData(parsedData);

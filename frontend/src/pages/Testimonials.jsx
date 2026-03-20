@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Star, Quote, User, Loader } from 'lucide-react';
+import { IMAGE_BASE_URL, API_ENDPOINTS } from '../config/api';
 
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -13,12 +14,12 @@ const Testimonials = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/testimonials');
+      const response = await fetch(API_ENDPOINTS.TESTIMONIALS);
       if (response.ok) {
         const data = await response.json();
         const processed = data.map(item => ({
             ...item,
-            image: item.image && !item.image.startsWith('http') ? `https://andamanholidaytrips.in${item.image}` : item.image
+            image: item.image && !item.image.startsWith('http') ? `${IMAGE_BASE_URL}${item.image}` : item.image
         }));
         setTestimonials(processed);
       }

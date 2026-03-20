@@ -3,6 +3,7 @@ import { MapPin, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -13,14 +14,14 @@ const PopularSightseeing = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await fetch('https://andamanholidaytrips.in/api/activities');
+        const response = await fetch(API_ENDPOINTS.ACTIVITIES);
         if (response.ok) {
           const data = await response.json();
           const mappedData = data.slice(0, 6).map(activity => ({
             name: activity.title,
             location: activity.location,
             image: activity.images && activity.images.length > 0 
-                  ? (activity.images[0].startsWith('http') ? activity.images[0] : `https://andamanholidaytrips.in${activity.images[0]}`)
+                  ? (activity.images[0].startsWith('http') ? activity.images[0] : `${IMAGE_BASE_URL}${activity.images[0]}`)
                   : '/img/hero-1.jpg',
             rating: "4.9", // Placeholder
             slug: activity.slug,

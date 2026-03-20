@@ -3,6 +3,7 @@ import { Clock, ArrowRight, Tag, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
@@ -12,7 +13,7 @@ const TrendingPackages = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch('https://andamanholidaytrips.in/api/packages');
+        const response = await fetch(API_ENDPOINTS.PACKAGES);
         if (response.ok) {
           const data = await response.json();
           
@@ -25,7 +26,7 @@ const TrendingPackages = () => {
             title: pkg.title,
             duration: pkg.duration,
             image: pkg.featured_image && !pkg.featured_image.startsWith('http')
-                  ? `https://andamanholidaytrips.in${pkg.featured_image}`
+                  ? `${IMAGE_BASE_URL}${pkg.featured_image}`
                   : (pkg.featured_image || (pkg.images && pkg.images[0]) || '/img/hero-1.jpg'),
             type: pkg.category.replace('-', ' '),
             rating: 4.8, // Placeholder

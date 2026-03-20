@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Loader } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../../config/api';
 
 const ManageServices = () => {
+  const { token } = useAuth();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    if (token) {
+        fetchServices();
+    }
+  }, [token]);
 
   const fetchServices = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/services');
+      const response = await fetch(API_ENDPOINTS.SERVICES, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch services');
       }
@@ -29,9 +39,10 @@ const ManageServices = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
-        await fetch(`https://andamanholidaytrips.in/api/services/${id}`, {
+        await fetch(`${API_ENDPOINTS.SERVICES}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -45,8 +56,7 @@ const ManageServices = () => {
   if (loading) return <div className="flex justify-center p-10"><Loader className="animate-spin" /></div>;
   if (error) return <div className="text-red-500 p-10">Error: {error}</div>;
 
-  return (
-    <div>
+  return (    <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Manage Services</h2>
         <Link to="/dashboard/services/create" className="bg-brand-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-brand-blue/90">
@@ -61,7 +71,7 @@ const ManageServices = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -71,7 +81,7 @@ const ManageServices = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="h-10 w-16 bg-gray-200 rounded overflow-hidden">
                      {service.image ? (
-                       <img src={`https://andamanholidaytrips.in${service.image}`} alt={service.title} className="h-full w-full object-cover" />
+                       <img src={`${IMAGE_BASE_URL}${service.image}`} alt={service.title} className="h-full w-full object-cover" />
                      ) : (
                        <span className="text-xs text-gray-400 flex items-center justify-center h-full">No Img</span>
                      )}

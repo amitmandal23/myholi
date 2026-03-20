@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2, Loader, Eye, X } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { API_ENDPOINTS } from '../../config/api';
 
 const ManageInquiries = () => {
+  const { token } = useAuth();
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedInquiry, setSelectedInquiry] = useState(null);
 
   useEffect(() => {
-    fetchInquiries();
-  }, []);
+    if (token) {
+        fetchInquiries();
+    }
+  }, [token]);
 
   const fetchInquiries = async () => {
     try {
-      const response = await fetch('https://andamanholidaytrips.in/api/inquiries');
+      const response = await fetch(API_ENDPOINTS.INQUIRIES, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch inquiries');
       }
@@ -29,9 +39,10 @@ const ManageInquiries = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this inquiry?')) {
       try {
-        await fetch(`https://andamanholidaytrips.in/api/inquiries/${id}`, {
+        await fetch(`${API_ENDPOINTS.INQUIRIES}/${id}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json',
           },
         });
@@ -44,9 +55,10 @@ const ManageInquiries = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await fetch(`https://andamanholidaytrips.in/api/inquiries/${id}`, {
+      const response = await fetch(`${API_ENDPOINTS.INQUIRIES}/${id}`, {
         method: 'PUT',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },

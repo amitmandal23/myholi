@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import SEO from '../components/common/SEO';
 import { Clock, ArrowRight, Tag, Star, MapPin, Filter } from 'lucide-react';
 import Loader from '../components/common/Loader';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -28,7 +29,7 @@ const SearchPage = () => {
         if (category && category !== 'All Types') params.append('category', category);
         if (searchQuery) params.append('search', searchQuery);
 
-        const response = await fetch(`https://andamanholidaytrips.in/api/packages?${params.toString()}`);
+        const response = await fetch(`${API_ENDPOINTS.PACKAGES}?${params.toString()}`);
         if (response.ok) {
           const data = await response.json();
           // Map data
@@ -39,7 +40,7 @@ const SearchPage = () => {
             price: pkg.price ? `₹${Number(pkg.price).toLocaleString('en-IN')}` : 'Get Quote',
             discounted_price: pkg.discounted_price ? `₹${Number(pkg.discounted_price).toLocaleString('en-IN')}` : null,
             image: pkg.featured_image && !pkg.featured_image.startsWith('http')
-                  ? `https://andamanholidaytrips.in${pkg.featured_image}`
+                  ? `${IMAGE_BASE_URL}${pkg.featured_image}`
                   : (pkg.featured_image || (pkg.images && pkg.images[0]) || '/img/hero-1.jpg'),
             type: pkg.category.replace('-', ' '),
             rating: 4.8, 

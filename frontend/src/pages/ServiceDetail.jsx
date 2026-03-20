@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { CheckCircle, Phone } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { API_ENDPOINTS, IMAGE_BASE_URL } from '../config/api';
 
 const ServiceDetail = () => {
   const { slug } = useParams();
@@ -13,13 +14,13 @@ const ServiceDetail = () => {
   useEffect(() => {
     const fetchServiceData = async () => {
       try {
-        const response = await fetch(`https://andamanholidaytrips.in/api/services/slug/${slug}`);
+        const response = await fetch(API_ENDPOINTS.SERVICE_BY_SLUG(slug));
         if (!response.ok) throw new Error('Service not found');
         const result = await response.json();
         
         // Fix image path
         if (result.image && !result.image.startsWith('http')) {
-            result.image = `https://andamanholidaytrips.in${result.image}`;
+            result.image = `${IMAGE_BASE_URL}${result.image}`;
         }
 
         // Parse features
