@@ -1,7 +1,7 @@
 const API_BASE_URL =
   window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
-    ? "http://localhost/myholi/backend/public/api"
+    window.location.hostname === "127.0.0.1"
+    ? "http://localhost/testholiday/backend/public/api"
     : "https://andamanholidaytrips.in/api";
 
 export const API_ENDPOINTS = {
@@ -40,12 +40,16 @@ export const API_ENDPOINTS = {
 
   // Inquiries
   INQUIRIES: `${API_BASE_URL}/inquiries`,
+
+  // Gallery image delete
+  PACKAGE_GALLERY_REMOVE: (id) => `${API_BASE_URL}/gallery-remove/package/${id}`,
+  ACTIVITY_GALLERY_REMOVE: (id) => `${API_BASE_URL}/gallery-remove/activity/${id}`,
 };
 
 export const IMAGE_BASE_URL =
   window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
-    ? "http://localhost/myholi/backend/public"
+    window.location.hostname === "127.0.0.1"
+    ? "http://localhost/testholiday/backend/public"
     : "https://andamanholidaytrips.in";
 
 export default API_BASE_URL;

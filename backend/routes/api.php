@@ -22,13 +22,23 @@ Route::get('/services', [ServiceController::class, 'index']);
 Route::get('/testimonials', [TestimonialController::class, 'index']);
 
 Route::get('/activities/slug/{slug}', [ActivityController::class, 'getBySlug']);
-Route::get('/packages/{category}/{slug}', [PackageController::class, 'getByCategoryAndSlug']);
+Route::get('/packages/{category}/{slug}', [PackageController::class, 'getByCategoryAndSlug'])->where('category', '[a-zA-Z\-]+');
 Route::get('/destinations/slug/{slug}', [DestinationController::class, 'getBySlug']);
 Route::get('/blogs/slug/{slug}', [BlogController::class, 'getBySlug']);
 Route::get('/services/slug/{slug}', [ServiceController::class, 'getBySlug']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Temporary test route - no auth
+Route::post('/gallery-remove/{type}/{id}', function(\Illuminate\Http\Request $request, $type, $id) {
+    if ($type === 'package') {
+        return app(\App\Http\Controllers\PackageController::class)->deleteGalleryImage($request, $id);
+    } elseif ($type === 'activity') {
+        return app(\App\Http\Controllers\ActivityController::class)->deleteGalleryImage($request, $id);
+    }
+    return response()->json(['message' => 'Invalid type'], 422);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

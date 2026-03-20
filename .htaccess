@@ -1,7 +1,10 @@
 RewriteEngine On
 
-# Send API requests to Laravel backend
-RewriteRule ^api/(.*)$ backend/public/index.php [L]
+# Send API requests to Laravel backend - preserve method
+RewriteCond %{REQUEST_URI} ^/myholi/api/(.*)$
+RewriteRule ^api/(.*)$ backend/public/index.php [L,QSA,E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+RewriteRule ^api/(.*)$ backend/public/index.php [L,QSA]
 
 # Allow existing files (JS, CSS, images, directories)
 RewriteCond %{REQUEST_FILENAME} -f [OR]

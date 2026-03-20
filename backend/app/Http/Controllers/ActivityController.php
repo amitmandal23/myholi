@@ -76,9 +76,26 @@ class ActivityController extends Controller
     {
         try {
             $activity = Activity::findOrFail($id);
+
+            // Handle gallery image deletion (lightweight operation)
+            if ($request->has('delete_gallery_image')) {
+                $imageUrl = $request->input('delete_gallery_image');
+                $images = $activity->images ?? [];
+                if (is_string($images)) {
+                    $images = json_decode($images, true) ?? [];
+                }
+                $images = array_values(array_filter($images, fn($img) => $img !== $imageUrl));
+                try {
+                    $relativePath = ltrim(str_replace('/storage/', '', $imageUrl), '/');
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($relativePath);
+                } catch (\Exception $fe) {}
+                $activity->images = $images;
+                $activity->save();
+                return response()->json(['message' => 'Image deleted', 'images' => $images]);
+            }
             
             // Prepare data for update
-            $data = $request->except(['slug', 'image', 'gallery_images']);
+            $data = $request->except(['slug', 'image', 'gallery_images', 'delete_gallery_image']);
             
             // Handle Gallery Images Update
             $currentImages = $activity->images ?? [];
@@ -133,5 +150,43 @@ class ActivityController extends Controller
     {
         Activity::destroy($id);
         return response()->json(['message' => 'Deleted successfully']);
+    }
+
+    /**
+     * Delete a specific gallery image from an activity.
+     */
+    public function deleteGalleryImage(Request $request, $id)
+    {
+        try {
+            $activity = Activity::findOrFail($id);
+
+            $imageUrl = $request->query('image_url') ?: $request->input('image_url');
+            if (!$imageUrl) {
+                return response()->json(['message' => 'image_url is required'], 422);
+            }
+
+            $images = $activity->images ?? [];
+            if (is_string($images)) {
+                $images = json_decode($images, true) ?? [];
+            }
+
+            $images = array_values(array_filter($images, fn($img) => $img !== $imageUrl));
+
+            // Try to delete physical file (non-fatal if it fails)
+            try {
+                $relativePath = ltrim(str_replace('/storage/', '', $imageUrl), '/');
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($relativePath);
+            } catch (\Exception $fileEx) {
+                \Log::warning('Could not delete gallery file: ' . $fileEx->getMessage());
+            }
+
+            $activity->images = $images;
+            $activity->save();
+
+            return response()->json(['message' => 'Image deleted', 'images' => $images]);
+        } catch (\Exception $e) {
+            \Log::error('deleteGalleryImage activity error: ' . $e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }

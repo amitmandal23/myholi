@@ -188,7 +188,27 @@ class PackageController extends Controller
                 return response()->json(['message' => 'Package not found'], 404);
             }
 
-            $data = $request->except(['slug', 'featured_image', 'gallery_images']);
+            // Handle gallery image deletion (lightweight operation)
+            if ($request->has('delete_gallery_image')) {
+                $imageUrl = $request->input('delete_gallery_image');
+                \Log::info('Deleting gallery image: ' . $imageUrl);
+                $images = $package->images ?? [];
+                if (is_string($images)) {
+                    $images = json_decode($images, true) ?? [];
+                }
+                $images = array_values(array_filter($images, fn($img) => $img !== $imageUrl));
+                try {
+                    $relativePath = ltrim(str_replace('/storage/', '', $imageUrl), '/');
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($relativePath);
+                } catch (\Exception $fe) {}
+                $package->images = $images;
+                $package->save();
+                return response()->json(['message' => 'Image deleted', 'images' => $images]);
+            }
+
+            \Log::info('Update request keys: ' . implode(', ', array_keys($request->all())));
+
+            $data = $request->except(['slug', 'featured_image', 'gallery_images', 'delete_gallery_image']);
             
             // Handle Featured Image
             if ($request->hasFile('featured_image')) {
@@ -253,5 +273,47 @@ class PackageController extends Controller
 
         $package->delete();
         return response()->json(['message' => 'Package deleted successfully']);
+    }
+
+    /**
+     * Delete a specific gallery image from a package.
+     * Called via POST to /packages/{id} with _method=PUT and delete_gallery_image=<url>
+     */
+    public function deleteGalleryImage(Request $request, string $id)
+    {
+        try {
+            $package = Package::find($id);
+            if (!$package) {
+                return response()->json(['message' => 'Package not found'], 404);
+            }
+
+            $imageUrl = $request->query('image_url') ?: $request->input('image_url');
+            if (!$imageUrl) {
+                return response()->json(['message' => 'image_url is required'], 422);
+            }
+
+            $images = $package->images ?? [];
+            if (is_string($images)) {
+                $images = json_decode($images, true) ?? [];
+            }
+
+            $images = array_values(array_filter($images, fn($img) => $img !== $imageUrl));
+
+            // Try to delete physical file (non-fatal if it fails)
+            try {
+                $relativePath = ltrim(str_replace('/storage/', '', $imageUrl), '/');
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($relativePath);
+            } catch (\Exception $fileEx) {
+                \Log::warning('Could not delete gallery file: ' . $fileEx->getMessage());
+            }
+
+            $package->images = $images;
+            $package->save();
+
+            return response()->json(['message' => 'Image deleted', 'images' => $images]);
+        } catch (\Exception $e) {
+            \Log::error('deleteGalleryImage error: ' . $e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }
